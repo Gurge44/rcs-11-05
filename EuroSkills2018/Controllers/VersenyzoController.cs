@@ -59,5 +59,16 @@ namespace EuroSkills2018.Controllers
 
             return Ok(versenyzo);
         }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteVersenyzo(int id)
+        {
+            var versenyzo = await _context.Versenyzok.FindAsync(id);
+            if (versenyzo == null) return NotFound();
+
+            _context.Versenyzok.Remove(versenyzo);
+            await _context.SaveChangesAsync();
+            return NoContent();
+        }
     }
 }
