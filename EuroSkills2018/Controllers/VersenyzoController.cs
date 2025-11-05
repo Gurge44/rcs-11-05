@@ -1,6 +1,7 @@
 ﻿using EuroSkills2018.Data;
 using EuroSkills2018.DTOs;
 using EuroSkills2018.Models;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -43,6 +44,20 @@ namespace EuroSkills2018.Controllers
             _context.Versenyzok.Add(ujVersenyzo);
             await _context.SaveChangesAsync();
             return Ok();
+        }
+
+
+        [HttpPatch("{id}")]
+        public async Task<ActionResult> PatchVersenyzo(int id, [FromBody] JsonPatchDocument<Versenyzo> patcher)
+        {
+            if (patcher == null) return BadRequest();
+
+            var versenyzo = await _context.Versenyzok.FindAsync(id);
+            if (versenyzo == null) return NotFound();
+
+            patcher.ApplyTo(versenyzo);
+
+            return Ok(versenyzo);
         }
     }
 }
